@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>과학 단위 변환기</title>
+  <style>
+    :root {
+      --bg: #f4f6fb;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --accent: #2563eb;
+      --border: #e5e7eb;
+      --error: #dc2626;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0f172a;
+        --card: #1e293b;
+        --text: #e5e7eb;
+        --muted: #94a3b8;
+        --accent: #60a5fa;
+        --border: #334155;
+        --error: #f87171;
+      }
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: system-ui, -apple-system, "Malgun Gothic", "Apple SD Gothic Neo", sans-serif;
+      line-height: 1.5;
+    }
+    main { max-width: 640px; margin: 0 auto; padding: 32px 16px 48px; }
+    h1 { margin: 0 0 4px; font-size: 1.75rem; }
+    .lead { margin: 0 0 24px; color: var(--muted); }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+    .card h2 { margin: 0 0 12px; font-size: 1.1rem; }
+    label { display: block; font-size: 0.9rem; color: var(--muted); margin-bottom: 6px; }
+    .input-row { display: flex; align-items: center; gap: 8px; }
+    input {
+      flex: 1;
+      min-width: 0;
+      font-size: 1.1rem;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--bg);
+      color: var(--text);
+    }
+    input:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+    .unit { min-width: 48px; font-weight: 600; }
+    .result { margin: 12px 0 0; font-size: 1.05rem; }
+    .result strong { color: var(--accent); font-size: 1.25rem; }
+    .result.error { color: var(--error); }
+    footer { color: var(--muted); font-size: 0.85rem; text-align: center; }
+    footer a { color: var(--accent); }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>과학 단위 변환기</h1>
+    <p class="lead">숫자를 입력하면 바로 변환됩니다.</p>
+
+    <section class="card">
+      <h2>🌡️ 섭씨 → 화씨 · 절대온도</h2>
+      <label for="celsius">섭씨 온도</label>
+      <div class="input-row">
+        <input id="celsius" type="number" step="any" value="25" inputmode="decimal">
+        <span class="unit">°C</span>
+      </div>
+      <p class="result" id="celsius-result"></p>
+    </section>
+
+    <section class="card">
+      <h2>🌡️ 화씨 → 섭씨</h2>
+      <label for="fahrenheit">화씨 온도</label>
+      <div class="input-row">
+        <input id="fahrenheit" type="number" step="any" value="100" inputmode="decimal">
+        <span class="unit">°F</span>
+      </div>
+      <p class="result" id="fahrenheit-result"></p>
+    </section>
+
+    <section class="card">
+      <h2>🚗 시속 → 초속</h2>
+      <label for="kmh">시속</label>
+      <div class="input-row">
+        <input id="kmh" type="number" step="any" value="36" inputmode="decimal">
+        <span class="unit">km/h</span>
+      </div>
+      <p class="result" id="kmh-result"></p>
+    </section>
+
+    <footer>
+      <a href="https://github.com/moon-pixel-ai/pr-practice">GitHub에서 코드 보기</a>
+    </footer>
+  </main>
+
+  <script type="module">
+    import {
+      celsiusToFahrenheit,
+      fahrenheitToCelsius,
+      celsiusToKelvin,
+      kmhToMs,
+    } from './src/convert.js';
+
+    // 소수점 둘째 자리까지 보여 주고, 불필요한 0은 없앤다
+    const fmt = (n) => Number(n.toFixed(2)).toLocaleString('ko-KR');
+
+    function bind(inputId, resultId, render) {
+      const input = document.getElementById(inputId);
+      const result = document.getElementById(resultId);
+      const update = () => {
+        result.classList.remove('error');
+        if (input.value.trim() === '') {
+          result.textContent = '숫자를 입력하세요.';
+          return;
+        }
+        try {
+          result.innerHTML = render(Number(input.value));
+        } catch (err) {
+          result.classList.add('error');
+          result.textContent = err.message;
+        }
+      };
+      input.addEventListener('input', update);
+      update();
+    }
+
+    bind('celsius', 'celsius-result', (c) => {
+      const k = celsiusToKelvin(c);
+      return `<strong>${fmt(celsiusToFahrenheit(c))} °F</strong> · <strong>${fmt(k)} K</strong>`;
+    });
+
+    bind('fahrenheit', 'fahrenheit-result', (f) =>
+      `<strong>${fmt(fahrenheitToCelsius(f))} °C</strong>`);
+
+    bind('kmh', 'kmh-result', (v) =>
+      `<strong>${fmt(kmhToMs(v))} m/s</strong>`);
+  </script>
+</body>
+</html>

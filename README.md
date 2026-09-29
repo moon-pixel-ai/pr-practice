@@ -3,6 +3,8 @@
 과학 수업에서 자주 쓰는 단위를 변환하는 작은 JavaScript 모듈입니다.
 GitHub Pull Request(PR) 연습용으로 만들었습니다.
 
+👉 **웹에서 써 보기:** https://moon-pixel-ai.github.io/pr-practice/
+
 ## 들어 있는 함수
 
 | 함수 | 설명 |
