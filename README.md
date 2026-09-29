@@ -20,3 +20,11 @@ import { celsiusToKelvin, kmhToMs } from './src/convert.js';
 celsiusToKelvin(0); // 273.15
 kmhToMs(36);        // 10
 ```
+
+## 테스트 실행
+
+Node.js 18 이상이 필요하며, 따로 설치할 패키지는 없습니다.
+
+```bash
+npm test
+```
