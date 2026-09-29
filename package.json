@@ -1,0 +1,11 @@
+{
+  "name": "pr-practice",
+  "version": "1.0.0",
+  "description": "첫 PR 연습용 과학 단위 변환기",
+  "type": "module",
+  "main": "src/convert.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "license": "MIT"
+}
